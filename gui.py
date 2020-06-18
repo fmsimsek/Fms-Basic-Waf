@@ -1,5 +1,5 @@
 from sys import stdout,platform
-from os import path
+from os import path,geteuid
 from time import sleep
 from subprocess import Popen, PIPE, STDOUT, run , check_output ,CalledProcessError
 from collections import Counter
@@ -28,6 +28,8 @@ class GeneralGui:
    
  def system_required(self,):
   try:
+     
+    if geteuid() == 0:
        stdout.write(self.GREEN)
        print(' Sistem Gereksinimleri Kontrol Ediliyor\n')
        sleep(1)
@@ -48,6 +50,14 @@ class GeneralGui:
        else:
           print('Kullanmış Olduğunuz İşletim Sistemi :'+linux_distribution()[0]+' Desteklenmemektedir...\nÇıkış Yapılıyor...')
           exit()
+
+    else:
+        stdout.write(self.CRED)
+        print('Fms Waf Root Yetkisi ile çalışmadıktadır lütfen root yetkisi ile çalıştırın. !/n')
+        sleep(0.5)
+        print('Çıkış yapılıyor...')
+        sleep(0.5)
+        exit()
 
   except CalledProcessError as exc:
           
