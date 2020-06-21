@@ -97,17 +97,26 @@ class GeneralGui:
    
       if match(self.pattern,self.domain) and (path.exists(self.http_path)): 
         try:
+          self.counts      = (int(input(" Bir İp Kaç Kez Tekrarlanınca Banlansın ")))
+          self.time        = (int(input(" Kaç Saniye İçersinde Tekrarlanan İp Adresi Banlansın")))
+          self.flush_time = self.time
           self.status = {
           '1':'Http',
           '2':'Https',
           }
           self.inp = input(' Lütfen Websitenizin ziyaret edilen protokolü Seçiniz Rakam İle;\n 1)Http  2)Https \n Seçiminiz: ')
           self.main_progress()
-        except  :
+            
+        except ValueError as expm:
+          print('Boş Bırakılamaz veya Sadece Rakam Girmelisin...')
+        
+        except :
           print(self.CRED,"\n Hatalı Değer Girildi.. Lütfen Tekrar Deneyiniz...")
 
       else:
         print(self.CRED,"Böyle bir alan adı yok veya yanlış domain sytax girildi...")
+  
+  
 
   except KeyboardInterrupt:
           print(self.CRED,"CTRL + C ile Çıkış Yapıldı...")
@@ -148,11 +157,20 @@ class GeneralGui:
         sleep(1)
         for i in mylist:
           i=(str(i))
-          cnc[i] += 1            
-          if (int(cnc[i])) > 5:           
+          cnc[i] += 1
+          back = self.time 
+          print(self.time,'Zaman Sayacı ')
+          print(cnc[i],'Tekrar Sayacı')            
+          if (int(cnc[i])) > self.counts and self.time == 0:           
               print(self.CRED,i,"- - İp adresi Engellenmiştir..")       
-              engelle = run(['sudo','ufw','deny','from',i], check=False,stdout=PIPE)
-              print('')
+              engelle = run(['sudo','ufw','insert','1','deny','from',i,'to','any','port','80','comment','FMS WAF Blocked'],stdout=PIPE)       
+              print("")
+              self.time = self.flush_time
+          self.time -= 1
+          
+          
+
+
     else:
       deneme = Popen (['tail','-f',self.https_path], universal_newlines=True, stdout=PIPE)
       cnc = Counter()
@@ -166,14 +184,19 @@ class GeneralGui:
         sleep(1)
         for i in mylist:
           i=(str(i))
-          cnc[i] += 1            
-          if (int(cnc[i])) > 5:           
+          cnc[i] += 1
+          back = self.time 
+          print(self.time,'Zaman Sayacı ')
+          print(cnc[i],'Tekrar Sayacı')            
+          if (int(cnc[i])) > self.counts and self.time == 0:           
               print(self.CRED,i,"- - İp adresi Engellenmiştir..")       
-              engelle = run(['sudo','ufw','deny','from',i], check=False,stdout=PIPE)
-              print('')
+              engelle = run(['sudo','ufw','insert','1','deny','from',i,'to','any','port','80','comment','FMS WAF Blocked'],stdout=PIPE)       
+              print("")
+              self.time = self.flush_time
+          self.time -= 1
 
     
-
+ 
           
  
 
