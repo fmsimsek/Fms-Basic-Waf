@@ -138,7 +138,16 @@ class GeneralGui:
          deny_list = check_output('ufw status numbered | grep FMS',shell=True, universal_newlines=True)
          print(self.CRED,deny_list)
 
-        
+         stdout.write(self.GREEN)
+         kaldir = (str(input(" İp Adresi Engeli Kaldırmak İstermisiniz ? \n 1)Evet \n 2)Hayır \n Seçiminiz : ")))
+         kaldir_secim = {
+           '1':'evet',
+           '2':'hayir'
+         }
+
+         if kaldir_secim.get(kaldir) in "evet":
+          numara = (str(input("Kaldırılmasını İstediğiniz İp adresini Numara İle Seçiniz :")))
+          run(["ufw","delete",numara])
           
 
  
