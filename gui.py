@@ -87,46 +87,69 @@ class GeneralGui:
       print(' |____/ \__,_|___/_|\___|     \/  \/ \__,_|_|       \/    |_| ')  
       print('')   
       sleep(0.01)
+       
+      #Seçenek Listesi...
+      self.secim_sonuc = (str(input(" Lütfen Yapmak İstediğiniz Seçeneklerden Birisini Seçiniz Rakam İle; \n 1) Basif Waf Koruma Prosedürü \n 2) İp Adresi Engel Kaldırma \n 3) Çıkış \n Seçiminiz :")))
+      self.secim = {
+        '1':'koruma',
+        '2':'engel',
+        '3':'cikis'
+      }
 
-      self.domain   = (str(input(" Lütfen Domain Adresi Giriniz : ")))
-      self.pattern  = '^([A-Za-z0-9]\.|[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]\.){1,3}[A-Za-z]{2,6}$'
-      self.path     = "/usr/local/apache/domlogs/"
-      self.status   = {}
-      self.http_path  = self.path+self.domain
-      self.https_path = self.path+self.domain+'-ssl_log'
-   
-      if match(self.pattern,self.domain) and (path.exists(self.http_path)): 
-        try:
-          self.counts      = (int(input(" Bir İp Kaç Kez Tekrarlanınca Banlansın ")))
-          self.time        = (int(input(" Kaç Saniye İçersinde Tekrarlanan İp Adresi Banlansın")))
-          self.flush_time = self.time
-          self.status = {
-          '1':'Http',
-          '2':'Https',
-          }
-          self.inp = input(' Lütfen Websitenizin ziyaret edilen protokolü Seçiniz Rakam İle;\n 1)Http  2)Https \n Seçiminiz: ')
-          self.main_progress()
-            
-        except ValueError as expm:
-          print('Boş Bırakılamaz veya Sadece Rakam Girmelisin...')
-        
-        except :
-          print(self.CRED,"\n Hatalı Değer Girildi.. Lütfen Tekrar Deneyiniz...")
+      if self.secim.get(self.secim_sonuc) in "koruma": 
 
+        self.domain   = (str(input(" Lütfen Domain Adresi Giriniz : ")))
+        self.pattern  = '^([A-Za-z0-9]\.|[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]\.){1,3}[A-Za-z]{2,6}$'
+        self.path     = "/usr/local/apache/domlogs/"
+        self.status   = {}
+        self.http_path  = self.path+self.domain
+        self.https_path = self.path+self.domain+'-ssl_log'
+    
+        if match(self.pattern,self.domain) and (path.exists(self.http_path)): 
+          try:
+            self.counts      = (int(input(" Bir İp Kaç Kez Tekrarlanınca Banlansın ")))
+            self.time        = (int(input(" Kaç Saniye İçersinde Tekrarlanan İp Adresi Banlansın")))
+            self.flush_time = self.time
+            self.status = {
+            '1':'Http',
+            '2':'Https',
+            }
+
+
+            self.inp = input(' Lütfen Websitenizin ziyaret edilen protokolü Seçiniz Rakam İle;\n 1)Http  2)Https \n Seçiminiz: ')
+            self.main_progress()
+              
+          except ValueError as expm:
+            print('Boş Bırakılamaz veya Sadece Rakam Girmelisin...')
+          
+          except :
+            print(self.CRED,"\n Hatalı Değer Girildi.. Lütfen Tekrar Deneyiniz...")
+
+        else:
+          print(self.CRED,"Böyle bir alan adı yok veya yanlış domain sytax girildi...")
+
+
+      elif self.secim.get(self.secim_sonuc) in "engel":
+         
+        pass
+          
+
+ 
       else:
-        print(self.CRED,"Böyle bir alan adı yok veya yanlış domain sytax girildi...")
-  
-  
+        print(self.CRED,"Manuel ile Çıkış Yapıldı...")
+        stdout.write(self.CEND)
+        exit()
+    
 
   except KeyboardInterrupt:
-          print(self.CRED,"CTRL + C ile Çıkış Yapıldı...")
-          stdout.write(self.CEND)
-          exit()
-         
+            print(self.CRED,"CTRL + C ile Çıkış Yapıldı...")
+            stdout.write(self.CEND)
+            exit()
+          
   except EOFError:
-          print(self.CRED,"CTRL + D ile Çıkış Yapıldı...")
-          stdout.write(self.CEND)
-          exit()
+            print(self.CRED,"CTRL + D ile Çıkış Yapıldı...")
+            stdout.write(self.CEND)
+            exit()
 
 
 
