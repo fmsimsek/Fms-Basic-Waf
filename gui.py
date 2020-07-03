@@ -131,7 +131,14 @@ class GeneralGui:
 
       elif self.secim.get(self.secim_sonuc) in "engel":
          
-        pass
+         print(" Fms Waf Tarafından Engellenen İp Adresleri Gösteriliyor...")
+         sleep(1)
+         print("")
+         self.progress_bar()
+         deny_list = check_output('ufw status numbered | grep FMS',shell=True, universal_newlines=True)
+         print(self.CRED,deny_list)
+
+        
           
 
  
