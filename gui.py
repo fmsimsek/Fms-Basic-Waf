@@ -6,6 +6,9 @@ from collections import Counter
 from re import *
 from platform import *
 
+#Yeni Güncellemeler Geliyor...
+
+
 
  
 class GeneralGui:
