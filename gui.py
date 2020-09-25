@@ -6,8 +6,6 @@ from collections import Counter
 from re import *
 from platform import *
 
-#Yeni Güncellemeler Geliyor...
-
 
 
  
@@ -20,15 +18,17 @@ class GeneralGui:
    self.CEND  = '\33[0m' # Default Text Renk Stili.
    self.GREEN = '\033[0;32m' # Başarılı Text Renk Stili.
    self.CURL  = '\33[4m'  #  Alt Çizgili Dikkatli Renk Stili.
+   self.screen_clean=run(['clear','-','x']) #Ekran Temizleme.
 
    
-   
+   #Fonksiyon Çağırılım Sırası.
    self.system_required()
    self.progress_bar()
    self.usr_intput()
    self.main_progress()
    
-   
+#Sistem Gereksinim Kontrolü
+#**********  *********  *********  *********  *********  *********  *********  *********  *********          
  def system_required(self,):
   try:
      
@@ -73,9 +73,10 @@ class GeneralGui:
             ufw_start   = run(['systemctl','start','ufw'],stderr=stdout)
             clear_scr   = run(['clear','-x'],stderr=stdout)
             stdout.write(self.GREEN)
+#**********  *********  *********  *********  *********  *********  *********  *********  *********          
 
-    
-   
+#User İnput   
+#**********  *********  *********  *********  *********  *********  *********  *********  *********             
  def usr_intput(self,domain=...,time=...,delay=...):
   try:
    while(True):
@@ -120,6 +121,8 @@ class GeneralGui:
 
 
             self.inp = input(' Lütfen Websitenizin ziyaret edilen protokolü Seçiniz Rakam İle;\n 1)Http  2)Https \n Seçiminiz: ')
+            #Ekran Temizleme Gelecek...
+            #  screen_clean=run(['clear','-','x'])
             self.main_progress()
               
           except ValueError as expm:
@@ -169,9 +172,9 @@ class GeneralGui:
             print(self.CRED,"CTRL + D ile Çıkış Yapıldı...")
             stdout.write(self.CEND)
             exit()
+#**********  *********  *********  *********  *********  *********  *********  *********  *********          
 
-
-
+#Loading Bar...
 #**********  *********  *********  *********  *********  *********  *********  *********  *********          
  def progress_bar(self):
     for self.i in range(100+1):
@@ -181,8 +184,26 @@ class GeneralGui:
     print('\n')
 #**********  *********  *********  *********  *********  *********  *********  *********  *********    
 
+#Main Status Bar...
+#**********  *********  *********  *********  *********  *********  *********  *********  *********   
+
+ '''
+
+1) Sağ ve Sol Olmak üzere 2'ye bölünecekler ana kısım.
+2) Sağ kısımda sunucu top kısmından bilgiler.
+3) Sol kısımda Engellenen ip adres adet sayısı.
+4) Ortalama 1dk içersinde gelen toplam istek sayısı
+5) Dahası gelecek..
+
+ '''
+
+
+#**********  *********  *********  *********  *********  *********  *********  *********  ********
+
  
-  
+#Http Main Processler
+#**********  *********  *********  *********  *********  *********  *********  *********  *********        
+
  def main_progress(self):
    while(True):
     mylist = list()
@@ -210,7 +231,11 @@ class GeneralGui:
               self.time = self.flush_time
           self.time -= 1
           
-          
+#**********  *********  *********  *********  *********  *********  *********  *********  *********        
+
+#Https Main Processler.
+#**********  *********  *********  *********  *********  *********  *********  *********  *********        
+       
 
 
     else:
@@ -236,6 +261,7 @@ class GeneralGui:
               print("")
               self.time = self.flush_time
           self.time -= 1
+#**********  *********  *********  *********  *********  *********  *********  *********  *********        
 
     
  
