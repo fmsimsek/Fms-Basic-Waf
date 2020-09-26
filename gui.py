@@ -78,7 +78,7 @@ class GeneralGui:
 #User İnput   
 #**********  *********  *********  *********  *********  *********  *********  *********  *********             
  def usr_intput(self,domain=...,time=...,delay=...):
-  try:
+
    while(True):
     
    
@@ -93,85 +93,102 @@ class GeneralGui:
       sleep(0.01)
        
       #Seçenek Listesi...
-      self.secim_sonuc = (str(input(" Lütfen Yapmak İstediğiniz Seçeneklerden Birisini Seçiniz Rakam İle; \n 1) Basif Waf Koruma Prosedürü \n 2) İp Adresi Engel Kaldırma \n 3) Çıkış \n Seçiminiz :")))
-      self.secim = {
-        '1':'koruma',
-        '2':'engel',
-        '3':'cikis'
-      }
 
-      if self.secim.get(self.secim_sonuc) in "koruma": 
+      try:
 
-        self.domain   = (str(input(" Lütfen Domain Adresi Giriniz : ")))
-        self.pattern  = '^([A-Za-z0-9]\.|[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]\.){1,3}[A-Za-z]{2,6}$'
-        self.path     = "/usr/local/apache/domlogs/"
-        self.status   = {}
-        self.http_path  = self.path+self.domain
-        self.https_path = self.path+self.domain+'-ssl_log'
-    
-        if match(self.pattern,self.domain) and (path.exists(self.http_path)): 
-          try:
-            self.counts      = (int(input(" Bir İp Kaç Kez Tekrarlanınca Banlansın ")))
-            self.time        = (int(input(" Kaç Saniye İçersinde Tekrarlanan İp Adresi Banlansın")))
-            self.flush_time = self.time
-            self.status = {
-            '1':'Http',
-            '2':'Https',
-            }
+        self.secim_sonuc = (int(input(" Lütfen Yapmak İstediğiniz Seçeneklerden Birisini Seçiniz Rakam İle; \n 1) Basif Waf Koruma Prosedürü \n 2) İp Adresi Engel Kaldırma \n 3) Çıkış \n Seçiminiz :")))
+        #turple Switch Case :)
+        self.secim = {
+
+          1:'koruma',
+          2:'engel',
+          3:'cikis',
+
+        }
+
+     
+
+        if self.secim.get(self.secim_sonuc) in "koruma": 
+
+          self.domain   = (str(input(" Lütfen Domain Adresi Giriniz : ")))
+          self.pattern  = '^([A-Za-z0-9]\.|[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]\.){1,3}[A-Za-z]{2,6}$'
+          self.path     = "/usr/local/apache/domlogs/"
+          self.status   = {}
+          self.http_path  = self.path+self.domain
+          self.https_path = self.path+self.domain+'-ssl_log'
+      
+          if match(self.pattern,self.domain) and (path.exists(self.http_path)): 
+            try:
+              self.counts      = (int(input(" Bir İp Kaç Kez Tekrarlanınca Banlansın ")))
+              self.time        = (int(input(" Kaç Saniye İçersinde Tekrarlanan İp Adresi Banlansın")))
+              self.flush_time = self.time
+              self.status = {
+              '1':'Http',
+              '2':'Https',
+              }
 
 
-            self.inp = input(' Lütfen Websitenizin ziyaret edilen protokolü Seçiniz Rakam İle;\n 1)Http  2)Https \n Seçiminiz: ')
-            #Ekran Temizleme Gelecek...
-            #  screen_clean=run(['clear','-','x'])
-            self.main_progress()
-              
-          except ValueError as expm:
-            print('Boş Bırakılamaz veya Sadece Rakam Girmelisin...')
+              self.inp = input(' Lütfen Websitenizin ziyaret edilen protokolü Seçiniz Rakam İle;\n 1)Http  2)Https \n Seçiminiz: ')
+              #Ekran Temizleme Gelecek...
+              #  screen_clean=run(['clear','-','x'])
+              self.main_progress()
+                
+            except ValueError :
+              print('Boş Bırakılamaz veya Sadece Rakam Girmelisin...')
+            
+            except :
+              print(self.CRED,"\n Hatalı Değer Girildi.. Lütfen Tekrar Deneyiniz...")
+
+          else:
+            print(self.CRED,"Böyle bir alan adı yok veya yanlış domain sytax girildi...")
+
+
+        elif self.secim.get(self.secim_sonuc) in "engel":
           
-          except :
-            print(self.CRED,"\n Hatalı Değer Girildi.. Lütfen Tekrar Deneyiniz...")
+          print(" Fms Waf Tarafından Engellenen İp Adresleri Gösteriliyor...")
+          sleep(1)
+          print("")
+          self.progress_bar()
+          deny_list = check_output('ufw status numbered | grep FMS',shell=True, universal_newlines=True)
+          print(self.CRED,deny_list)
+
+          stdout.write(self.GREEN)
+          kaldir = (str(input(" İp Adresi Engeli Kaldırmak İstermisiniz ? \n 1)Evet \n 2)Hayır \n Seçiminiz : ")))
+          kaldir_secim = {
+            '1':'evet',
+            '2':'hayir'
+          }
+
+          if kaldir_secim.get(kaldir) in "evet":
+            numara = (str(input("Kaldırılmasını İstediğiniz İp adresini Numara İle Seçiniz :")))
+            run(["ufw","delete",numara])
+            
 
         else:
-          print(self.CRED,"Böyle bir alan adı yok veya yanlış domain sytax girildi...")
+          print(self.CRED,"Manuel Çıkış Yapılıyor...")
+          print(self.CEND)
+          exit()
+
+        
 
 
-      elif self.secim.get(self.secim_sonuc) in "engel":
-         
-         print(" Fms Waf Tarafından Engellenen İp Adresleri Gösteriliyor...")
-         sleep(1)
-         print("")
-         self.progress_bar()
-         deny_list = check_output('ufw status numbered | grep FMS',shell=True, universal_newlines=True)
-         print(self.CRED,deny_list)
+      except TypeError:
+             print(self.CRED,"Hatalı Seçim Yaptınız...")
+             self.GREEN
 
-         stdout.write(self.GREEN)
-         kaldir = (str(input(" İp Adresi Engeli Kaldırmak İstermisiniz ? \n 1)Evet \n 2)Hayır \n Seçiminiz : ")))
-         kaldir_secim = {
-           '1':'evet',
-           '2':'hayir'
-         }
+      except ValueError:
+             print(self.CRED,"Hatalı Deger Girdiniz...")
+             self.GREEN
 
-         if kaldir_secim.get(kaldir) in "evet":
-          numara = (str(input("Kaldırılmasını İstediğiniz İp adresini Numara İle Seçiniz :")))
-          run(["ufw","delete",numara])
-          
-
- 
-      else:
-        print(self.CRED,"Manuel ile Çıkış Yapıldı...")
-        stdout.write(self.CEND)
-        exit()
-    
-
-  except KeyboardInterrupt:
-            print(self.CRED,"CTRL + C ile Çıkış Yapıldı...")
-            stdout.write(self.CEND)
-            exit()
-          
-  except EOFError:
-            print(self.CRED,"CTRL + D ile Çıkış Yapıldı...")
-            stdout.write(self.CEND)
-            exit()
+      except KeyboardInterrupt:
+              print(self.CRED,"CTRL + C ile Çıkış Yapıldı...")
+              print(self.CEND)
+              exit()
+            
+      except EOFError:
+              print(self.CRED,"CTRL + D ile Çıkış Yapıldı...")
+              print(self.CEND)
+              exit()
 #**********  *********  *********  *********  *********  *********  *********  *********  *********          
 
 #Loading Bar...
