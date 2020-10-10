@@ -7,7 +7,6 @@ from re import *
 from platform import *
 
 
-
  
 class GeneralGui:
 
@@ -61,16 +60,26 @@ class GeneralGui:
         print('Çıkış yapılıyor...')
         sleep(0.5)
         exit()
-
+        
   except CalledProcessError as exc:
           
            if self.output in 'centos' or 'centos linux' or 'red hat enterprise linux server':
             print(self.CRED,exc.output.decode("utf-8"))
             print(self.GREEN,"Ufw Firewall Yükleniyor...")
             sleep(1)
-            ufw_install = run(['yum','install','ufw','-y'],stderr=stdout)          
-            ufw_enabled = run(['systemctl','enable','ufw'],stderr=stdout)
-            ufw_start   = run(['systemctl','start','ufw'],stderr=stdout)
+            ufw_install  = run(['yum','install','ufw','-y'],stderr=stdout)          
+            ufw_enabled  = run(['systemctl','enable','ufw'],stderr=stdout)
+            ufw_start    = run(['systemctl','start','ufw'],stderr=stdout)
+
+            #Yeni Özellik Tcp Olarak Listen Port Bilgisi Otomatik Firewall Eklenecek..
+            #Yeni güncellemeler gelicek :)
+            open_port    = check_output(" netstat -tnl |  awk -F:  {'print $4'}" ,shell=True,universal_newlines=True)
+            current_port = 0
+            if current_port < len(open_port.split()):
+              for i in open_port.split():
+               current_port_added = run(['ufw','allow',i]) 
+
+
             clear_scr   = run(['clear','-x'],stderr=stdout)
             stdout.write(self.GREEN)
 #**********  *********  *********  *********  *********  *********  *********  *********  *********          
@@ -243,7 +252,7 @@ class GeneralGui:
           print(cnc[i],'Tekrar Sayacı')            
           if (int(cnc[i])) > self.counts and self.time == 0:           
               print(self.CRED,i,"- - İp adresi Engellenmiştir..")       
-              engelle = run(['sudo','ufw','insert','1','deny','from',i,'to','any','port','80','comment','FMS WAF Blocked'],stdout=PIPE)       
+              engelle = run(['sudo','ufw','insert','1','deny','from',i,'to','any','port' ,'comment','FMS WAF Blocked'],stdout=PIPE)       
               print("")
               self.time = self.flush_time
           self.time -= 1
